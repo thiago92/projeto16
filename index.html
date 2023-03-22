@@ -13,7 +13,22 @@
 
 		let url = 'https://dev.kidopilabs.com.br/exercicio/covid.php?pais='+paisSelecionado
 
-		console.log(url);
+		let xmlHttp = new XMLHttpRequest()
+		xmlHttp.open('GET', url)
+
+		xmlHttp.onreadystatechange = () => {
+			if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+				let dadosJSONText = xmlHttp.responseText
+				let dadosJSONObj = JSON.parse(dadosJSONText)
+
+				document.getElementById("pais").value = dadosJSONObj.Pais;
+				document.getElementById("estado").value = dadosJSONObj.ProvinciaEstado;
+				document.getElementById("confirmados").value = dadosJSONObj.Confirmados;
+				document.getElementById("mortos").value = dadosJSONObj.Mortos;
+			}
+		}
+
+		xmlHttp.send()
 		}
 
 	</script>
