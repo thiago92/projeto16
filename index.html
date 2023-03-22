@@ -1,77 +1,80 @@
 <html lang="pt-br">
-	<head>
-		<meta charset="utf-8">
-		<title>App Pesquisa Endereço</title>
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">	
-		<script>
-			function getDadosEnderecoPorCep(cep) {
+<head>
+    <meta charset="utf-8">
+    <title>App Pesquisa Endereço</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">  
 
-				let url = 'https://viacep.com.br/ws/'+cep+'/json/'
+	<script>
 
-				let xmlHttp = new XMLHttpRequest()
-				xmlHttp.open('GET', url)
+		function getDadosPais(paises) {
+		const paisSelecionado = document.querySelector("#paises option:checked").text;
+		document.getElementById("pais").value = paisSelecionado;
+		//console.log(paisSelecionado);
 
-				xmlHttp.onreadystatechange = () => {
-					if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
-						let dadosJSONText = xmlHttp.responseText
-						let dadosJSONObj = JSON.parse(dadosJSONText)
+		let url = 'https://dev.kidopilabs.com.br/exercicio/covid.php?pais='+paisSelecionado
 
-						document.getElementById('endereco').value = dadosJSONObj.logradouro
-						document.getElementById('bairro').value = dadosJSONObj.bairro
-						document.getElementById('cidade').value = dadosJSONObj.localidade
-						document.getElementById('uf').value = dadosJSONObj.uf
+		console.log(url);
+		}
 
-						//console.log(dadosJSONObj)
-						// console.log(dadosJSONObj.logradouro)
-						// console.log(dadosJSONObj.bairro)
-						// console.log(dadosJSONObj.cep)
-						// console.log(dadosJSONObj.complemento)
-						// console.log(dadosJSONObj.ddd)
-						// console.log(dadosJSONObj.gia)
-						// console.log(dadosJSONObj.ibge)
-						// console.log(dadosJSONObj.localidade)
-						// console.log(dadosJSONObj.siafi)
-						// console.log(dadosJSONObj.uf)
+	</script>
+</head>
+<body>
+    
+    <nav class="navbar navbar-light bg-light mb-4">
+        <div class="container">
+            <div class="navbar-brand mb-0 h1">
+                <h3>App Pesquisa Países / Covid19</h3>
+            </div>
+        </div>
+    </nav>
 
-					}
-				}
-
-				xmlHttp.send()
-			}
-		</script>
-	</head>
-	<body>
-		
-		<nav class="navbar navbar-light bg-light mb-4">
-			<div class="container">
-				<div class="navbar-brand mb-0 h1">
-					<h3>App Pesquisa Endereço</h3>
-				</div>
-			</div>
-		</nav>
-
-		<div class="container">
-			<div class="row form-group">
-				<div class="col-sm-3">
-					<input type="text" class="form-control" placeholder="CEP" onblur="getDadosEnderecoPorCep(this.value)"/>
-				</div>
-				<div class="col-sm-9">
-					<input type="text" class="form-control" placeholder="Endereço" readonly id="endereco" />
-				</div>
-			</div>
-
-			<div class="row form-group">
-				<div class="col-sm-6">
-					<input type="text" class="form-control" placeholder="Bairro" readonly id="bairro"/>
-				</div>
-				<div class="col-sm-4">
-					<input type="text" class="form-control" placeholder="Cidade" readonly id="cidade"/>
-				</div>
-
-				<div class="col-sm-2">
-					<input type="text" class="form-control" placeholder="UF" readonly id="uf"/>
-				</div>
+    <div class="container">
+		<div class="row form-group">
+			<div class="col-sm-6">
+				<label for="paises">Selecione um país:</label>
+				<select id="paises" onblur="getDadosPais(this.value)"></select>
 			</div>
 		</div>
-	</body>
+		<div class="row form-group">
+
+			<div class="col-sm-3">
+				<label for="pais">País selecionado:</label>
+				<input type="text" class="form-control" placeholder="País" readonly id="pais"/>
+			</div>
+
+			<div class="col-sm-3">
+				<label for="estado">Estado/Província:</label>
+				<input type="text" class="form-control" placeholder="Provincia/Estado" readonly id="estado"/>
+			</div>
+
+			<div class="col-sm-3">
+				<label for="confirmados">Casos confirmados:</label>
+				<input type="text" class="form-control" placeholder="Confirmados" readonly id="confirmados"/>
+			</div>
+
+			<div class="col-sm-3">
+				<label for="mortos">Mortos:</label>
+				<input type="text" class="form-control" placeholder="Mortos" readonly id="mortos"/>
+			</div>
+		</div>
+    </div>
+
+    <script>
+        window.addEventListener("load", () => {
+            const select = document.getElementById("paises");
+
+            fetch("https://dev.kidopilabs.com.br/exercicio/covid.php?listar_paises=1")
+                .then(response => response.json())
+                .then(data => {
+                    for (const [key, value] of Object.entries(data)) {
+                        const option = document.createElement("option");
+                        option.value = key;
+                        option.text = value;
+                        select.appendChild(option);
+                    }
+                })
+                .catch(error => console.error(error));
+        });
+    </script>
+</body>
 </html>
