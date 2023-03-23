@@ -21,10 +21,11 @@
 				let dadosJSONText = xmlHttp.responseText
 				let dadosJSONObj = JSON.parse(dadosJSONText)
 
-				document.getElementById("pais").value = dadosJSONObj.Pais;
-				document.getElementById("estado").value = dadosJSONObj.ProvinciaEstado;
-				document.getElementById("confirmados").value = dadosJSONObj.Confirmados;
-				document.getElementById("mortos").value = dadosJSONObj.Mortos;
+				document.getElementById('pais').value = dadosJSONObj[0].Pais
+				document.getElementById('estado').value = dadosJSONObj[0].ProvinciaEstado
+				document.getElementById('confirmados').value = dadosJSONObj[0].Confirmados
+				document.getElementById('mortos').value = dadosJSONObj[0].Mortos
+
 			}
 		}
 
